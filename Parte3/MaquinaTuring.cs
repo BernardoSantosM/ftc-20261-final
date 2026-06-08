@@ -24,19 +24,19 @@ public sealed class ResultadoExecucao
 /// Maquina de Turing (MT) deterministica de fita unica.
 ///
 /// Traducao direta da definicao formal do enunciado: a 7-upla
-///   M = (Q, Sigma, Gamma, delta, q0, q_accept, q_reject), onde
+///   M = (Q, Sigma, Gamma, transicao, q0, q_accept, q_reject), onde
 ///   Q        -> conjunto finito de estados;
 ///   Sigma    -> alfabeto de entrada (o branco nao pertence a Sigma);
 ///   Gamma    -> alfabeto da fita, Sigma contido em Gamma e branco pertence a Gamma;
-///   delta    -> funcao de transicao (PARCIAL)  delta : Q x Gamma -> Q x Gamma x {L, R};
+///   transicao -> funcao de transicao parcial: Q x Gamma -> Q x Gamma x {L, R};
 ///   q0       -> estado inicial;
 ///   q_accept -> estado de aceitacao;
 ///   q_reject -> estado de rejeicao (q_reject != q_accept).
 ///
 /// Notacao: as direcoes L (left) e R (right) correspondem a "esquerda" (E) e
-/// "direita" (D) dos slides do Prof. Julio Cesar; a transicao delta(q, a) = [q', b, d]
+/// "direita" (D) dos slides do Prof. Julio Cesar; transicao(q, a) = [q', b, d]
 /// le-se "no estado q lendo a, escreve b, move o cabecote para d e vai para q'".
-/// Como delta e parcial, uma transicao indefinida faz a maquina parar em q_reject.
+/// Como a transicao e parcial, um par (estado, simbolo) indefinido faz a maquina parar em q_reject.
 /// </summary>
 public sealed class MaquinaTuring
 {
@@ -57,7 +57,7 @@ public sealed class MaquinaTuring
     public HashSet<char> AlfabetoFita { get; }
 
     /// <summary>
-    /// delta — funcao de transicao  delta : Q x Gamma -> Q x Gamma x {L, R}.
+    /// Funcao de transicao  transicao : Q x Gamma -> Q x Gamma x {L, R}.
     /// Chave: (estado atual, simbolo lido). Valor: (novo estado, simbolo escrito, direcao).
     /// </summary>
     public Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)> Transicao { get; }
@@ -124,11 +124,11 @@ public sealed class MaquinaTuring
         foreach (var ((origem, lido), (destino, escrito, direcao)) in Transicao)
         {
             if (!Estados.Contains(origem) || !Estados.Contains(destino))
-                throw new ArgumentException($"Transicao delta({origem}, {lido}) usa estado fora de Q.");
+                throw new ArgumentException($"Transicao transicao({origem}, {lido}) usa estado fora de Q.");
             if (!AlfabetoFita.Contains(lido) || !AlfabetoFita.Contains(escrito))
-                throw new ArgumentException($"Transicao delta({origem}, {lido}) usa simbolo fora de Gamma.");
+                throw new ArgumentException($"Transicao transicao({origem}, {lido}) usa simbolo fora de Gamma.");
             if (direcao != Esquerda && direcao != Direita)
-                throw new ArgumentException($"Direcao invalida '{direcao}' em delta({origem}, {lido}).");
+                throw new ArgumentException($"Direcao invalida '{direcao}' em transicao({origem}, {lido}).");
         }
     }
 
@@ -137,7 +137,7 @@ public sealed class MaquinaTuring
     /// instantanea a cada passo. A fita e uma estrutura DINAMICA
     /// (Dictionary&lt;int,char&gt;, chave = posicao); celulas nao escritas valem branco.
     /// A maquina para ao alcancar q_accept (aceita) ou q_reject (rejeita); uma
-    /// transicao indefinida (delta parcial) leva implicitamente a q_reject.
+    /// transicao indefinida (funcao parcial) leva implicitamente a q_reject.
     /// </summary>
     public ResultadoExecucao Executar(string entrada)
     {
@@ -172,7 +172,7 @@ public sealed class MaquinaTuring
 
             if (!Transicao.TryGetValue((estado, lido), out var acao))
             {
-                // delta indefinida: por convencao, a maquina para em q_reject.
+                // transicao indefinida: por convencao, a maquina para em q_reject.
                 estado = EstadoRejeicao;
                 rastro.Add(Configuracao(estado, fita, cabecote));
                 break;
@@ -202,11 +202,11 @@ public sealed class MaquinaTuring
 
     /// <summary>
     /// Imprime no console a definicao formal (7-upla) e a tabela da funcao de
-    /// transicao na notacao dos slides:  delta(q, a) = [q', b, d].
+    /// transicao na notacao dos slides:  transicao(q, a) = [q', b, d].
     /// </summary>
     public void ExibirDefinicao()
     {
-        Console.WriteLine("Definicao formal  M = (Q, Sigma, Gamma, delta, q0, q_accept, q_reject):");
+        Console.WriteLine("Definicao formal  M = (Q, Sigma, Gamma, transicao, q0, q_accept, q_reject):");
         Console.WriteLine($"  Q        = {{ {string.Join(", ", Estados.OrderBy(e => e))} }}");
         Console.WriteLine($"  Sigma    = {{ {string.Join(", ", Alfabeto.OrderBy(c => c))} }}");
         Console.WriteLine($"  Gamma    = {{ {string.Join(", ", AlfabetoFita.OrderBy(c => c))} }}   (branco = '{Branco}')");
@@ -214,9 +214,9 @@ public sealed class MaquinaTuring
         Console.WriteLine($"  q_accept = {EstadoAceitacao}");
         Console.WriteLine($"  q_reject = {EstadoRejeicao}");
         Console.WriteLine($"  limite   = {LimitePassos} passos");
-        Console.WriteLine("  delta (E = esquerda/L, D = direita/R):");
+        Console.WriteLine("  transicao (E = esquerda/L, D = direita/R):");
         foreach (var ((q, a), (q2, b, d)) in Transicao.OrderBy(t => t.Key.estado).ThenBy(t => t.Key.simbolo))
-            Console.WriteLine($"    delta({q}, {a}) = [{q2}, {b}, {d}]");
+            Console.WriteLine($"    transicao({q}, {a}) = [{q2}, {b}, {d}]");
         Console.WriteLine();
     }
 

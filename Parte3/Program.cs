@@ -32,10 +32,10 @@ Console.WriteLine("=============================================================
 //     q5 -> verificacao final: percorre os Z's ate o branco;
 //     qaccept / qreject -> estados de parada.
 // ----------------------------------------------------------------------------
-var deltaL4 = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
+var transicaoL4 = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
 {
     // q0: marca um 'a' como X e parte para achar um 'b'.
-    { ("q0", 'a'), ("q1", 'X', R) },  // delta(q0, a) = [q1, X, R]
+    { ("q0", 'a'), ("q1", 'X', R) },  // transicao(q0, a) = [q1, X, R]
     { ("q0", 'Y'), ("q4", 'Y', R) },  // sem 'a' restante: inicia verificacao
 
     // q1: anda a direita ate o primeiro 'b', pulando a's e Y's; marca 'b' como Y.
@@ -68,7 +68,7 @@ var mtL4 = new MaquinaTuring(
     estados: new[] { "q0", "q1", "q2", "q3", "q4", "q5", "qaccept", "qreject" },
     alfabeto: new[] { 'a', 'b', 'c' },
     alfabetoFita: new[] { 'a', 'b', 'c', 'X', 'Y', 'Z', '_' },
-    transicao: deltaL4,
+    transicao: transicaoL4,
     estadoInicial: "q0",
     estadoAceitacao: "qaccept",
     estadoRejeicao: "qreject",
@@ -90,17 +90,17 @@ ProcessarReconhecedor(mtL4, Path.Combine(baseDir, "entradas_mt.txt"));
 //     q0      -> percorre os '1' da entrada ate encontrar o branco;
 //     qaccept -> parada: o '1' adicional ja foi escrito (resultado pronto).
 // ----------------------------------------------------------------------------
-var deltaSucessor = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
+var transicaoSucessor = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
 {
-    { ("q0", '1'), ("q0", '1', R) },        // delta(q0, 1) = [q0, 1, R]  (anda sobre os 1)
-    { ("q0", '_'), ("qaccept", '1', R) },   // delta(q0, _) = [qaccept, 1, R]  (escreve o sucessor)
+    { ("q0", '1'), ("q0", '1', R) },        // transicao(q0, 1) = [q0, 1, R]  (anda sobre os 1)
+    { ("q0", '_'), ("qaccept", '1', R) },   // transicao(q0, _) = [qaccept, 1, R]  (escreve o sucessor)
 };
 
 var mtSucessor = new MaquinaTuring(
     estados: new[] { "q0", "qaccept", "qreject" },
     alfabeto: new[] { '1' },
     alfabetoFita: new[] { '1', '_' },
-    transicao: deltaSucessor,
+    transicao: transicaoSucessor,
     estadoInicial: "q0",
     estadoAceitacao: "qaccept",
     estadoRejeicao: "qreject",
