@@ -76,7 +76,7 @@ var mtL4 = new MaquinaTuring(
 
 Console.WriteLine(">> MT para L4 = { a^n b^n c^n | n >= 1 }\n");
 mtL4.ExibirDefinicao();
-ProcessarReconhecedor(mtL4, Path.Combine(baseDir, "entradas_mt.txt"));
+ProcessarReconhecedor(mtL4, Path.Combine(baseDir, "entradas_mt.txt"), JustificarL4);
 
 // ----------------------------------------------------------------------------
 // DESAFIO OBRIGATORIO: MT TRANSDUTORA que COMPUTA f(n) = n + 1 em unario.
@@ -116,8 +116,9 @@ ProcessarTransdutor(mtSucessor, Path.Combine(baseDir, "entradas_unario.txt"));
 //  Funcoes auxiliares de apresentacao
 // ============================================================================
 
-// Le cada linha do arquivo e exibe cadeia + rastro de configuracoes + veredito.
-static void ProcessarReconhecedor(MaquinaTuring mt, string caminho)
+// Le cada linha do arquivo e exibe cadeia + justificativa + rastro + veredito.
+// A justificativa de cada cadeia e produzida pela funcao 'justificar' recebida.
+static void ProcessarReconhecedor(MaquinaTuring mt, string caminho, Func<string, string> justificar)
 {
     if (!File.Exists(caminho))
     {
@@ -132,6 +133,7 @@ static void ProcessarReconhecedor(MaquinaTuring mt, string caminho)
 
         string exibicao = cadeia.Length == 0 ? "(lambda)" : cadeia;
         Console.WriteLine($"Cadeia : {exibicao}");
+        Console.WriteLine($"Caso   : {justificar(cadeia)}");
         ImprimirRastro(r.Rastro);
 
         if (!r.Parou)
@@ -167,6 +169,31 @@ static void ProcessarTransdutor(MaquinaTuring mt, string caminho)
         Console.WriteLine($"Saida   : {r.FitaFinal}   =>   f({n}) = {saida}");
         Console.WriteLine(new string('-', 60));
     }
+}
+
+// Gera uma justificativa legivel para o veredito de L4 = { a^n b^n c^n | n >= 1 },
+// derivada da estrutura da cadeia. Cobre todos os casos possiveis de entrada.
+// Observacao: quem DECIDE de fato e a Maquina de Turing; isto e apenas a explicacao exibida.
+static string JustificarL4(string w)
+{
+    if (w.Length == 0)
+        return "cadeia vazia (a linguagem exige n >= 1)";
+
+    foreach (char simbolo in w)
+        if (simbolo != 'a' && simbolo != 'b' && simbolo != 'c')
+            return $"contem o simbolo '{simbolo}', fora do alfabeto de entrada {{a, b, c}}";
+
+    // Conta os blocos na ordem esperada a...b...c.
+    int i = 0, na = 0, nb = 0, nc = 0;
+    while (i < w.Length && w[i] == 'a') { na++; i++; }
+    while (i < w.Length && w[i] == 'b') { nb++; i++; }
+    while (i < w.Length && w[i] == 'c') { nc++; i++; }
+
+    if (i != w.Length)
+        return "simbolos fora de ordem (nao segue o padrao a...b...c)";
+    if (na == nb && nb == nc)
+        return $"n = {na}";
+    return $"quantidades distintas (a={na}, b={nb}, c={nc})";
 }
 
 // Imprime, passo a passo, as configuracoes instantaneas da computacao.
