@@ -15,7 +15,7 @@ Implementação, em **C# (.NET 6+)**, de três máquinas abstratas fundamentais 
 |---|---|---|
 | Bernardo Santos Magalhães | _<preencher>_ | Parte 1 — AFD |
 | _<integrante 2>_ | _<preencher>_ | Parte 2 — Autômato de Pilha |
-| _<integrante 3>_ | _<preencher>_ | Parte 3 — Máquina de Turing |
+| Lucas Filipe França Nunes | 72401362 | Parte 3 — Máquina de Turing |
 
 ## Estrutura do repositório
 
@@ -35,7 +35,12 @@ ftc-20261-final/
   veredito (ACEITA/REJEITA), imprime a tabela de transições e carrega qualquer AFD a
   partir de `afd.json` (desafio obrigatório).
 - **Parte 2 — Autômato de Pilha:** _(a implementar pelo integrante responsável)._
-- **Parte 3 — Máquina de Turing:** _(a implementar pelo integrante responsável)._
+- **Parte 3 — Máquina de Turing:** simulador de MT representado como a 7-upla formal
+  `M = (Q, Σ, Γ, δ, q0, q_accept, q_reject)`, com fita dinâmica (`Dictionary<int,char>`) e
+  branco `'_'`. Reconhece `L4 = { aⁿbⁿcⁿ | n ≥ 1 }` por estratégia de marcação, exibindo a
+  cada passo o estado, a fita (com `[ ]` ao redor do símbolo sob o cabeçote) e a posição do
+  cabeçote, além de contador e limite configurável de passos. Inclui a MT transdutora que
+  computa `f(n) = n + 1` em unário (desafio obrigatório).
 
 ## Como compilar e executar
 
