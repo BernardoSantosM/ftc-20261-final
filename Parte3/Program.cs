@@ -71,7 +71,8 @@ var mtL4 = new MaquinaTuring(
     transicao: deltaL4,
     estadoInicial: "q0",
     estadoAceitacao: "qaccept",
-    estadoRejeicao: "qreject");
+    estadoRejeicao: "qreject",
+    limitePassos: 10_000);   // limite ajustavel: protege contra lacos infinitos
 
 Console.WriteLine(">> MT para L4 = { a^n b^n c^n | n >= 1 }\n");
 mtL4.ExibirDefinicao();
@@ -102,7 +103,8 @@ var mtSucessor = new MaquinaTuring(
     transicao: deltaSucessor,
     estadoInicial: "q0",
     estadoAceitacao: "qaccept",
-    estadoRejeicao: "qreject");
+    estadoRejeicao: "qreject",
+    limitePassos: 10_000);   // limite ajustavel: protege contra lacos infinitos
 
 Console.WriteLine("\n================================================================");
 Console.WriteLine(" DESAFIO - MT que COMPUTA f(n) = n + 1 em unario");
