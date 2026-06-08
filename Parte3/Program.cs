@@ -77,6 +77,39 @@ Console.WriteLine(">> MT para L4 = { a^n b^n c^n | n >= 1 }\n");
 mtL4.ExibirDefinicao();
 ProcessarReconhecedor(mtL4, Path.Combine(baseDir, "entradas_mt.txt"));
 
+// ----------------------------------------------------------------------------
+// DESAFIO OBRIGATORIO: MT TRANSDUTORA que COMPUTA f(n) = n + 1 em unario.
+//
+//   A entrada e n ocorrencias de '1'; a saida deve conter n + 1 ocorrencias.
+//   Estrategia: caminhar para a direita sobre os '1' ate o primeiro branco e,
+//   nele, escrever mais um '1' (o sucessor), parando em seguida. Tambem cobre
+//   n = 0 (entrada vazia -> escreve um '1', pois f(0) = 1).
+//
+//   Estados:
+//     q0      -> percorre os '1' da entrada ate encontrar o branco;
+//     qaccept -> parada: o '1' adicional ja foi escrito (resultado pronto).
+// ----------------------------------------------------------------------------
+var deltaSucessor = new Dictionary<(string, char), (string, char, char)>
+{
+    { ("q0", '1'), ("q0", '1', R) },        // delta(q0, 1) = [q0, 1, R]  (anda sobre os 1)
+    { ("q0", '_'), ("qaccept", '1', R) },   // delta(q0, _) = [qaccept, 1, R]  (escreve o sucessor)
+};
+
+var mtSucessor = new MaquinaTuring(
+    estados: new[] { "q0", "qaccept", "qreject" },
+    alfabeto: new[] { '1' },
+    alfabetoFita: new[] { '1', '_' },
+    transicao: deltaSucessor,
+    estadoInicial: "q0",
+    estadoAceitacao: "qaccept",
+    estadoRejeicao: "qreject");
+
+Console.WriteLine("\n================================================================");
+Console.WriteLine(" DESAFIO - MT que COMPUTA f(n) = n + 1 em unario");
+Console.WriteLine("================================================================\n");
+mtSucessor.ExibirDefinicao();
+ProcessarTransdutor(mtSucessor, Path.Combine(baseDir, "entradas_unario.txt"));
+
 // ============================================================================
 //  Funcoes auxiliares de apresentacao
 // ============================================================================
@@ -104,6 +137,32 @@ static void ProcessarReconhecedor(MaquinaTuring mt, string caminho)
 
         Console.WriteLine($"Passos : {r.Passos}");
         Console.WriteLine($"Result : {(r.Aceita ? "ACEITA" : "REJEITA")}  (parou em {r.EstadoFinal})");
+        Console.WriteLine(new string('-', 60));
+    }
+}
+
+// Le cada linha (entrada unaria), executa a MT transdutora e exibe a fita de saida.
+static void ProcessarTransdutor(MaquinaTuring mt, string caminho)
+{
+    if (!File.Exists(caminho))
+    {
+        Console.WriteLine($"[ERRO] Arquivo de entradas nao encontrado: {caminho}");
+        return;
+    }
+
+    foreach (string linha in File.ReadAllLines(caminho))
+    {
+        string cadeia = linha.Trim();
+        ResultadoExecucao r = mt.Executar(cadeia);
+
+        int n = cadeia.Length;
+        int saida = r.FitaFinal.Count(ch => ch == '1');
+        string exibicao = n == 0 ? "(lambda)" : cadeia;
+
+        Console.WriteLine($"Entrada : {exibicao}   (n = {n})");
+        ImprimirRastro(r.Rastro);
+        Console.WriteLine($"Passos  : {r.Passos}");
+        Console.WriteLine($"Saida   : {r.FitaFinal}   =>   f({n}) = {saida}");
         Console.WriteLine(new string('-', 60));
     }
 }
