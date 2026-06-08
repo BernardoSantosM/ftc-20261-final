@@ -82,7 +82,7 @@ public sealed class MaquinaTuring
         IEnumerable<string> estados,
         IEnumerable<char> alfabeto,
         IEnumerable<char> alfabetoFita,
-        Dictionary<(string, char), (string, char, char)> transicao,
+        Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)> transicao,
         string estadoInicial,
         string estadoAceitacao,
         string estadoRejeicao,
@@ -91,7 +91,7 @@ public sealed class MaquinaTuring
         Estados = new HashSet<string>(estados);
         Alfabeto = new HashSet<char>(alfabeto);
         AlfabetoFita = new HashSet<char>(alfabetoFita);
-        Transicao = new Dictionary<(string, char), (string, char, char)>(transicao);
+        Transicao = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>(transicao);
         EstadoInicial = estadoInicial;
         EstadoAceitacao = estadoAceitacao;
         EstadoRejeicao = estadoRejeicao;

@@ -32,7 +32,7 @@ Console.WriteLine("=============================================================
 //     q5 -> verificacao final: percorre os Z's ate o branco;
 //     qaccept / qreject -> estados de parada.
 // ----------------------------------------------------------------------------
-var deltaL4 = new Dictionary<(string, char), (string, char, char)>
+var deltaL4 = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
 {
     // q0: marca um 'a' como X e parte para achar um 'b'.
     { ("q0", 'a'), ("q1", 'X', R) },  // delta(q0, a) = [q1, X, R]
@@ -90,7 +90,7 @@ ProcessarReconhecedor(mtL4, Path.Combine(baseDir, "entradas_mt.txt"));
 //     q0      -> percorre os '1' da entrada ate encontrar o branco;
 //     qaccept -> parada: o '1' adicional ja foi escrito (resultado pronto).
 // ----------------------------------------------------------------------------
-var deltaSucessor = new Dictionary<(string, char), (string, char, char)>
+var deltaSucessor = new Dictionary<(string estado, char simbolo), (string novoEstado, char novoSimbolo, char direcao)>
 {
     { ("q0", '1'), ("q0", '1', R) },        // delta(q0, 1) = [q0, 1, R]  (anda sobre os 1)
     { ("q0", '_'), ("qaccept", '1', R) },   // delta(q0, _) = [qaccept, 1, R]  (escreve o sucessor)
