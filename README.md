@@ -13,7 +13,7 @@ Implementação, em **C# (.NET 6+)**, de três máquinas abstratas fundamentais 
 
 | Nome completo | Matrícula | Parte responsável |
 |---|---|---|
-| Bernardo Santos Magalhães | _<preencher>_ | Parte 1 — AFD |
+| Bernardo Santos Magalhães | 72400188 | Parte 1 — AFD |
 | João Victor Amaro de Araújo | 72400110 | Parte 2 — Autômato de Pilha |
 | Lucas Filipe França Nunes | 72401362 | Parte 3 — Máquina de Turing |
 
@@ -57,7 +57,7 @@ Cada parte é um projeto independente; repita `dotnet run` dentro de `Parte2/` e
 
 ## Vídeo de defesa
 
-🎥 _Link do YouTube (não listado): https://youtu.be/frcq_r53SjU <preencher antes da entrega>_
+🎥 _Link do YouTube (não listado): https://youtu.be/frcq_r53SjU
 
 ---
 
