@@ -60,5 +60,3 @@ Cada parte é um projeto independente; repita `dotnet run` dentro de `Parte2/` e
 🎥 _Link do YouTube (não listado): https://youtu.be/frcq_r53SjU
 
 ---
-
-_Entrega: 10/06/2026 — via Google Sala de Aula (apenas o link deste repositório)._
